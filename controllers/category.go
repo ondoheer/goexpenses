@@ -14,7 +14,6 @@ import (
 
 func GetCategories(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Printf("%v", data.Categories)
 	json.NewEncoder(w).Encode(data.Categories)
 }
 
@@ -47,8 +46,6 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 	cat.ID = len(data.Categories) + 1
 
 	data.Categories = append(data.Categories, cat)
-
-	fmt.Printf("%v", data.Categories)
 
 	json.NewEncoder(w).Encode(data.Categories)
 

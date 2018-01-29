@@ -66,3 +66,34 @@ Endpoint | method | action
 /category/{id} | PUT | update category with id={id}
 /category/{id} | DELETE | delete category with id={id}
 
+
+
+## Categories of prevuious app
+
+peluquería
+ comer fuera
+ taxi
+ compras
+ otros
+ viajes
+ alcohol
+ salir (de noche)
+ salud
+ ropa
+ regalos
+ fijos
+ alquiler
+ supervisión
+ athelas
+ cine
+ juegos
+ lavanderia
+ ministerio
+ hogar
+ gatos
+ consultorio
+ impuestos
+ programación
+ comics
+ accesorios de belleza
+ deporte
