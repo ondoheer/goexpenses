@@ -20,19 +20,20 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 func GetCategory(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
-	for _, item := range data.Categories {
+	id, err := strconv.Atoi(params["id"])
+	var cat models.Category
 
-		id, err := strconv.Atoi(params["id"])
-
+	if err == nil {
+		result, err := cat.GetById(id)
 		if err == nil {
-			if item.ID == id {
-				json.NewEncoder(w).Encode(item)
-			}
-		} else {
-			json.NewEncoder(w).Encode(err)
-		}
 
+			json.NewEncoder(w).Encode(result)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			w.Write([]byte("{\"error\":\"Recurso no econtrado\"}"))
+		}
 	}
+
 }
 
 func CreateCategory(w http.ResponseWriter, r *http.Request) {

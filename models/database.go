@@ -1,14 +1,17 @@
 package models
 
-import "github.com/go-pg/pg"
+import (
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+)
 
-func GetDB() *pg.DB {
+func GetDB() *gorm.DB {
 
-	db := pg.Connect(&pg.Options{
-		User:     "postgres",
-		Password: "",
-		Database: "postgres",
-	})
+	db, err := gorm.Open("postgres", "host=localhost user=ondoheer dbname=expenses sslmode=disable")
+
+	if err != nil {
+		panic(err)
+	}
 
 	return db
 }
