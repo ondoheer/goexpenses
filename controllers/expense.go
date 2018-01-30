@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -59,11 +60,18 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := models.GetDB()
-	db.Create(&expense)
+	dbErr := db.Create(&expense).Error
 
-	w.WriteHeader(201)
+	if dbErr == nil {
 
-	json.NewEncoder(w).Encode(&expense)
+		w.WriteHeader(201)
+
+		json.NewEncoder(w).Encode(&expense)
+	} else {
+		msg := fmt.Sprintf(" %s", dbErr)
+		w.WriteHeader(500)
+		w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+	}
 
 }
 
@@ -90,8 +98,16 @@ func UpdateExpense(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 
 			expense.ID = id
-			db.Save(&expense)
-			json.NewEncoder(w).Encode(&expense)
+			dbErr := db.Save(&expense).Error
+
+			if dbErr == nil {
+
+				json.NewEncoder(w).Encode(&expense)
+			} else {
+				msg := fmt.Sprintf(" %s", dbErr)
+				w.WriteHeader(500)
+				w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+			}
 
 		} else {
 			w.WriteHeader(500)
@@ -115,11 +131,17 @@ func DeleteExpense(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("{\"error\":\"server error\"}"))
 	} else {
 		expense.ID = id
-		db.Delete(&expense)
+		dbErr := db.Delete(&expense).Error
+		if dbErr == nil {
 
-		w.WriteHeader(202) // deleted
+			w.WriteHeader(202) // deleted
 
-		w.Write([]byte("{\"status\":\"deleted\"}"))
+			w.Write([]byte("{\"status\":\"deleted\"}"))
+		} else {
+			msg := fmt.Sprintf(" %s", dbErr)
+			w.WriteHeader(500)
+			w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+		}
 	}
 
 }

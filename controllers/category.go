@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -59,11 +60,20 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := models.GetDB()
-	db.Create(&cat)
+	dbErr := db.Create(&cat).Error
 
-	w.WriteHeader(201)
+	if dbErr == nil {
 
-	json.NewEncoder(w).Encode(&cat)
+		w.WriteHeader(201)
+
+		json.NewEncoder(w).Encode(&cat)
+
+	} else {
+		msg := fmt.Sprintf(" %s", dbErr)
+		w.WriteHeader(500)
+		w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+
+	}
 
 }
 
@@ -90,8 +100,15 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 
 			cat.ID = id
-			db.Save(&cat)
-			json.NewEncoder(w).Encode(&cat)
+			dbErr := db.Save(&cat).Error
+
+			if dbErr == nil {
+				json.NewEncoder(w).Encode(&cat)
+			} else {
+				msg := fmt.Sprintf(" %s", dbErr)
+				w.WriteHeader(500)
+				w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+			}
 
 		} else {
 			w.WriteHeader(500)
@@ -115,11 +132,19 @@ func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("{\"error\":\"server error\"}"))
 	} else {
 		cat.ID = id
-		db.Delete(&cat)
+		dbErr := db.Delete(&cat).Error
 
-		w.WriteHeader(202) // deleted
+		if dbErr != nil {
 
-		w.Write([]byte("{\"status\":\"deleted\"}"))
+			w.WriteHeader(202) // deleted
+
+			w.Write([]byte("{\"status\":\"deleted\"}"))
+		} else {
+			msg := fmt.Sprintf(" %s", dbErr)
+			w.WriteHeader(500)
+			w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+		}
+
 	}
 
 }

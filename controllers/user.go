@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -59,11 +60,18 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := models.GetDB()
-	db.Create(&user)
+	dbErr := db.Create(&user).Error
 
-	w.WriteHeader(201)
+	if dbErr == nil {
 
-	json.NewEncoder(w).Encode(&user)
+		w.WriteHeader(201)
+
+		json.NewEncoder(w).Encode(&user)
+	} else {
+		msg := fmt.Sprintf(" %s", dbErr)
+		w.WriteHeader(500)
+		w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+	}
 
 }
 
@@ -90,8 +98,16 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 
 			user.ID = id
-			db.Save(&user)
-			json.NewEncoder(w).Encode(&user)
+			dbErr := db.Save(&user).Error
+
+			if dbErr == nil {
+
+				json.NewEncoder(w).Encode(&user)
+			} else {
+				msg := fmt.Sprintf(" %s", dbErr)
+				w.WriteHeader(500)
+				w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+			}
 
 		} else {
 			w.WriteHeader(500)
@@ -115,11 +131,19 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("{\"error\":\"server error\"}"))
 	} else {
 		user.ID = id
-		db.Delete(&user)
+		dbErr := db.Delete(&user).Error
 
-		w.WriteHeader(202) // deleted
+		if dbErr == nil {
 
-		w.Write([]byte("{\"status\":\"deleted\"}"))
+			w.WriteHeader(202) // deleted
+
+			w.Write([]byte("{\"status\":\"deleted\"}"))
+		} else {
+			msg := fmt.Sprintf(" %s", dbErr)
+			w.WriteHeader(500)
+			w.Write([]byte("{\"error\": \"" + msg + "\"}"))
+		}
+
 	}
 
 }
