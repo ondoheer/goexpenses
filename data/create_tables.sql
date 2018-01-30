@@ -1,16 +1,17 @@
 CREATE TABLE "user" (
   "id" SERIAL CONSTRAINT "pk_user" PRIMARY KEY,
   "name" TEXT NOT NULL,
-  "email" TEXT NOT NULL,
+  "email" TEXT NOT NULL UNIQUE,
   "password" TEXT NOT NULL,
-  "username" TEXT NOT NULL
+  "username" TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE "category" (
   "id" SERIAL CONSTRAINT "pk_category" PRIMARY KEY,
-  "name" TEXT NOT NULL,
+  "name" TEXT NOT NULL UNIQUE,
   "label" TEXT NOT NULL,
   "user" INTEGER NOT NULL
+
 );
 
 CREATE INDEX "idx_category__user" ON "category" ("user");

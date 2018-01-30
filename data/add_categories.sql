@@ -1,3 +1,5 @@
+
+
 INSERT INTO "user" (username, password, email, name) VALUES ('ondoheer', 's3b40th1!', 'ondoheer@gmail.com', 'Pedro Baumann');
 
 INSERT INTO "category" (name, label, "user") VALUES

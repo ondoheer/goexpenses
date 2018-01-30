@@ -1,15 +1,14 @@
 package models
 
 import (
-	"errors"
 	"fmt"
 )
 
 type Category struct {
-	ID     int    `json:"id,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Name   string `json:"name,omitempty"`
-	UserID int    `json:"userId,omitempty"`
+	ID    int    `json:"id,omitempty"`
+	Label string `json:"label,omitempty"`
+	Name  string `json:"name,omitempty"`
+	User  int    `json:"user,omitempty"`
 }
 
 func (Category) TableName() string {
@@ -17,18 +16,5 @@ func (Category) TableName() string {
 }
 
 func (c Category) String() string {
-	return fmt.Sprintf("Category<%d %s>", c.ID, c.Label)
-}
-
-func (c Category) GetById(id int) (Category, error) {
-	db := GetDB()
-
-	category := Category{ID: id}
-
-	if db.First(&category, id).RecordNotFound() {
-
-		return category, errors.New("Item no encontrado")
-	}
-
-	return category, nil
+	return fmt.Sprintf("Category< id: %d label: %s >", c.ID, c.Label)
 }
