@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"../models"
 	"github.com/gorilla/mux"
@@ -59,6 +60,7 @@ func CreateExpense(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
+	expense.Date = time.Now()
 	db := models.GetDB()
 	dbErr := db.Create(&expense).Error
 

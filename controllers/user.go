@@ -60,6 +60,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := models.GetDB()
+
+	user.Password = user.HashPassword(user.Password)
+
 	dbErr := db.Create(&user).Error
 
 	if dbErr == nil {

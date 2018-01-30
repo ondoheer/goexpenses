@@ -2,15 +2,16 @@ package models
 
 import (
 	"fmt"
+	"time"
 )
 
 type Expense struct {
-	ID       int     `json:"id,omitempty"`
-	Date     string  `json:"date,omitempty"`
-	Name     string  `json:"name,omitempty"`
-	Amount   float32 `json:"amount,omitempty"`
-	User     int     `json:"user,omitempty"`
-	Category int     `json:"category,omitempty"`
+	ID       int       `json:"id,omitempty"`
+	Date     time.Time `json:"date,omitempty"`
+	Name     string    `json:"name,omitempty"`
+	Amount   float32   `json:"amount,omitempty"`
+	User     int       `json:"user,omitempty"`
+	Category int       `json:"category,omitempty"`
 }
 
 func (Expense) TableName() string {
